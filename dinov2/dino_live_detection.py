@@ -2,7 +2,9 @@ import cv2
 import pickle
 import torch
 import numpy as np
+import csv
 
+from datetime import datetime
 from PIL import Image
 from torchvision import transforms
 
@@ -25,7 +27,7 @@ print(
 # Detection Threshold
 # =====================================
 
-CONFIDENCE_THRESHOLD = 0.30
+CONFIDENCE_THRESHOLD = 0.40
 
 LOCK_THRESHOLD = 5
 
@@ -127,6 +129,8 @@ consecutive_detections = 0
 
 target_locked = False
 
+lock_saved = False
+
 # =====================================
 # Live Loop
 # =====================================
@@ -198,14 +202,72 @@ while True:
 
             target_locked = False
 
+            lock_saved = False
+
         # =====================================
         # Target Lock
         # =====================================
 
         if consecutive_detections >= LOCK_THRESHOLD:
+
             consecutive_detections = LOCK_THRESHOLD
 
             target_locked = True
+
+            # =====================================
+            # Save Detection Once
+            # =====================================
+
+            if not lock_saved:
+
+                timestamp = datetime.now().strftime(
+                    "%Y%m%d_%H%M%S"
+                )
+
+                image_path = (
+                    "../detections/frames/"
+                    f"dino_lock_{timestamp}.jpg"
+                )
+
+                cv2.imwrite(
+                    image_path,
+                    frame
+                )
+
+                with open(
+                    "../detections/detection_log.csv",
+                    "a",
+                    newline=""
+                ) as file:
+
+                    writer = csv.writer(
+                        file
+                    )
+
+                    writer.writerow([
+
+                        timestamp,
+
+                        round(
+                            highest_similarity,
+                            4
+                        ),
+
+                        best_match,
+
+                        image_path
+
+                    ])
+
+                print(
+                    "\nTARGET SAVED"
+                )
+
+                print(
+                    f"Image Saved: {image_path}"
+                )
+
+                lock_saved = True
 
     # =====================================
     # Status Logic
@@ -214,7 +276,7 @@ while True:
     if target_locked:
 
         status_text = (
-            f"TARGET LOCKED"
+            "TARGET LOCKED"
         )
 
         status_color = (
@@ -226,7 +288,7 @@ while True:
     elif highest_similarity >= CONFIDENCE_THRESHOLD:
 
         status_text = (
-            f"TARGET FOUND"
+            "TARGET FOUND"
         )
 
         status_color = (
