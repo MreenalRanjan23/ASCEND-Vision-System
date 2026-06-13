@@ -1,15 +1,36 @@
+# Python
 venv/
 __pycache__/
 *.pyc
 
+# Datasets
 dataset/raw/
 dataset/test/
 dataset/reference/
 
+# YOLO training datasets
+train/
+valid/
+test/
+
+# Training outputs
+runs/
 results/
 
+# IDE
 .vscode/
 .idea/
 
+# Python checkpoints
 *.pth
+
+# Ignore all YOLO weights EXCEPT best.pt
 *.pt
+!best.pt
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
