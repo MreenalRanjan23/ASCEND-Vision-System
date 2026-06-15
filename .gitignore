@@ -7,7 +7,7 @@ __pycache__/
 dataset/raw/
 dataset/test/
 dataset/reference/
-
+dataset/arena/
 # YOLO training datasets
 train/
 valid/
@@ -34,3 +34,12 @@ results/
 # OS files
 .DS_Store
 Thumbs.db
+
+# YOLO Test Images
+test_images/
+
+# Arena Dataset
+dataset/arena/yolo_dataset/
+
+# YOLO Results
+runs/
