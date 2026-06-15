@@ -70,9 +70,8 @@ BASE_DIR = os.path.dirname(
 
 IMAGE_FOLDER = os.path.join(
     BASE_DIR,
-    "dataset",
-    "arena",
-    "reference"
+    "mission_assets",
+    "reference_features"
 )
 
 DATABASE_PATH = os.path.join(
