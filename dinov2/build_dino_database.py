@@ -22,15 +22,15 @@ model.eval()
 
 transform = transforms.Compose([
 
-    transforms.Resize((224,224)),
+    transforms.Resize((224, 224)),
 
     transforms.ToTensor(),
 
     transforms.Normalize(
 
-        mean=[0.485,0.456,0.406],
+        mean=[0.485, 0.456, 0.406],
 
-        std=[0.229,0.224,0.225]
+        std=[0.229, 0.224, 0.225]
     )
 ])
 
@@ -62,12 +62,33 @@ def get_embedding(image_path):
 # Paths
 # =====================================
 
-IMAGE_FOLDER = (
-    "../dataset/test"
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
 )
 
-DATABASE_PATH = (
-    "../embeddings/dino_database.pkl"
+IMAGE_FOLDER = os.path.join(
+    BASE_DIR,
+    "dataset",
+    "arena",
+    "reference"
+)
+
+DATABASE_PATH = os.path.join(
+    BASE_DIR,
+    "embeddings",
+    "dino_database.pkl"
+)
+
+print(
+    "\nIMAGE_FOLDER:",
+    IMAGE_FOLDER
+)
+
+print(
+    "DATABASE_PATH:",
+    DATABASE_PATH
 )
 
 # =====================================

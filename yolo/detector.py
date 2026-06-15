@@ -1,26 +1,75 @@
 from ultralytics import YOLO
+import os
 
-MODEL_PATH = "models/best.pt"
+# =====================================
+# Model Path
+# =====================================
+
+MODEL_PATH = os.path.join(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    ),
+    "models",
+    "best.pt"
+)
+
+# =====================================
+# Load Model Once
+# =====================================
 
 model = YOLO(MODEL_PATH)
 
+print("YOLO detector loaded")
+
+# =====================================
+# Detection Function
+# =====================================
+
 def detect(frame):
-    results = model(frame, conf=0.25)
+
+    results = model(
+        frame,
+        conf=0.25,
+        imgsz=1280,
+        verbose=False
+    )
 
     detections = []
 
-    for result in results:
-        for box in result.boxes:
-            cls_id = int(box.cls[0])
-            conf = float(box.conf[0])
+    if len(results[0].boxes) == 0:
+        return detections
 
-            x1, y1, x2, y2 = map(int, box.xyxy[0])
+    for box in results[0].boxes:
 
-            detections.append({
-                "class_id": cls_id,
-                "class_name": model.names[cls_id],
-                "confidence": conf,
-                "bbox": [x1, y1, x2, y2]
-            })
+        cls_id = int(box.cls[0])
+
+        confidence = float(
+            box.conf[0]
+        )
+
+        x1, y1, x2, y2 = map(
+            int,
+            box.xyxy[0]
+        )
+
+        center_x = (x1 + x2) // 2
+        center_y = (y1 + y2) // 2
+
+        detections.append({
+
+            "class":
+                model.names[cls_id],
+
+            "confidence":
+                confidence,
+
+            "bbox":
+                [x1, y1, x2, y2],
+
+            "center":
+                [center_x, center_y]
+        })
 
     return detections
